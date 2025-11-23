@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Birthday Surprise</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: "Poppins", sans-serif;
+        background: radial-gradient(circle at top, #ffe3f2, #ffb6d9, #ff9ecb);
+        overflow: hidden;
+        height: 100vh;
+        color: #4a2c2c;
+    }
+
+    /* Generic screen wrapper */
+    .screen {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+        z-index: 5;
+    }
+
+    .screen.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    /* ---------- START SCREEN ---------- */
+    #startScreen .card {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px 40px;
+        border-radius: 24px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+        text-align: center;
+        max-width: 420px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.8);
+    }
+
+    #startScreen h1 {
+        font-size: 2.3rem;
+        margin-bottom: 10px;
+    }
+
+    #startScreen p {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-bottom: 22px;
+    }
+
+    #startBtn {
+        padding: 14px 40px;
+        font-size: 1.2rem;
+        border-radius: 999px;
+        border: none;
+        background: linear-gradient(135deg, #ff6fa8, #ff8fbf);
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 10px 24px rgba(255, 111, 168, 0.5);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #startBtn:hover {
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 0 14px 30px rgba(255, 111, 168, 0.6);
+    }
+
+    /* ---------- COUNTDOWN SCREEN ---------- */
+    #countdownScreen {
+        flex-direction: column;
+    }
+
+    #countdownCircle {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 20%, #fff, #ffc1de);
+        box-shadow: 0 0 40px rgba(255,255,255,0.9), 0 15px 40px rgba(0,0,0,0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #countdownNumber {
+        font-size: 5rem;
+        font-weight: 600;
+        color: #ff4f88;
+        text-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+
+    .pop-animation {
+        animation: pop 1s ease-out;
+    }
+
+    @keyframes pop {
+        0% { transform: scale(0.3); opacity: 0; }
+        20% { opacity: 1; }
+        60% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(1.4); opacity: 0; }
+    }
+
+    /* ---------- BIRTHDAY SCREEN ---------- */
+    #birthdayScreen {
+        flex-direction: column;
+        text-align: center;
+        z-index: 10;
+    }
+
+    .birthday-card {
+    background: rgba(255,255,255,0.96);
+    padding: 40px 50px 45px;
+    border-radius: 32px;
+    box-shadow: 0 25px 55px rgba(0,0,0,0.25), 0 0 40px rgba(255,200,220,0.7);
+    max-width: 520px;
+    margin: 0 auto;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+    .birthday-header {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #ff4f88;
+    text-shadow: 0 3px 12px rgba(255,150,190,0.8);
+}
+    .cake-img {
+    width: 360px;
+    max-width: 90%;
+    border-radius: 26px;
+    background: #fff;
+    padding: 14px;
+    box-shadow: 
+        0 16px 40px rgba(0,0,0,0.3),
+        0 0 28px rgba(255,180,220,0.9);
+}
+
+/* Bigger name */
+.name {
+    margin-top: 18px;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #4a2c2c;
+}
+
+    .subtext {
+        font-size: 0.95rem;
+        opacity: 0.8;
+        margin-top: 4px;
+    }
+
+    #msgBtn {
+        margin-top: 18px;
+        padding: 10px 28px;
+        font-size: 1.1rem;
+        border-radius: 999px;
+        border: none;
+        background: linear-gradient(135deg, #ff6fa8, #ff8fbf);
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 8px 22px rgba(255,111,168,0.55);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #msgBtn:hover {
+        transform: translateY(-1px) scale(1.03);
+        box-shadow: 0 12px 26px rgba(255,111,168,0.7);
+    }
+
+    /* Gentle floating animation for the card */
+    .floaty {
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+    }
+
+    /* ---------- CONFETTI ---------- */
+    .confetti {
+        position: fixed;
+        top: -20px;
+        width: 10px;
+        height: 14px;
+        opacity: 0.9;
+        border-radius: 3px;
+        animation: fall linear infinite;
+        z-index: 1;
+    }
+
+    @keyframes fall {
+        0% { transform: translateY(-10vh) rotate(0deg); }
+        100% { transform: translateY(120vh) rotate(360deg); }
+    }
+
+    /* ---------- BALLOONS ---------- */
+    .balloon {
+        position: fixed;
+        bottom: -120px;
+        width: 52px;
+        height: 72px;
+        border-radius: 50%;
+        animation: rise linear infinite;
+        z-index: 1;
+        box-shadow: inset -8px -10px 14px rgba(0,0,0,0.15);
+    }
+
+    .balloon::after {
+        content: "";
+        position: absolute;
+        width: 2px;
+        height: 40px;
+        background: rgba(80,80,80,0.8);
+        left: 50%;
+        bottom: -38px;
+        transform: translateX(-50%);
+    }
+
+    @keyframes rise {
+        0% { transform: translateY(0) translateX(0); }
+        100% { transform: translateY(-140vh) translateX(15px); }
+    }
+
+    /* ---------- POPUP MESSAGE ---------- */
+    #popupOverlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+    }
+
+    #popupBox {
+        background: #fff;
+        padding: 26px 28px 22px;
+        border-radius: 22px;
+        max-width: 360px;
+        text-align: center;
+        font-size: 1.05rem;
+        box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+        animation: popupIn 0.4s ease-out;
+    }
+
+    @keyframes popupIn {
+        from { transform: scale(0.7); opacity: 0; }
+        to   { transform: scale(1); opacity: 1; }
+    }
+
+    #closePopup {
+        margin-top: 18px;
+        padding: 9px 22px;
+        background: #ff4f88;
+        border: none;
+        color: white;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        box-shadow: 0 8px 20px rgba(255,79,136,0.55);
+    }
+</style>
+</head>
+
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="screen active">
+    <div class="card">
+        <h1>🎁 Birthday Surprise 🎁</h1>
+        <p>Click for a birthday surprise!</p>
+        <button id="startBtn">Start Surprise ✨</button>
+    </div>
+</div>
+
+<!-- COUNTDOWN SCREEN -->
+<div id="countdownScreen" class="screen">
+    <div id="countdownCircle">
+        <span id="countdownNumber">3</span>
+    </div>
+</div>
+
+<!-- BIRTHDAY SCREEN -->
+<div id="birthdayScreen" class="screen">
+    <div class="birthday-card floaty">
+        <div class="birthday-header">Happy Birthday! 🎂🎂🎂</div>
+        <img src="cake001.jpg" alt="Birthday Cake" class="cake-img">
+        <div class="name">Jonas</div>
+        <div class="subtext">Wishing you the sweetest day ever 💖</div>
+        <button id="msgBtn">Read Message 💌</button>
+    </div>
+</div>
+
+<!-- POPUP MESSAGE -->
+<div id="popupOverlay">
+    <div id="popupBox">
+        💖 Wishing you a day filled with happiness, laughter, and all your favorite things! 💖
+        <br><br>
+        Thank you for being so special — may this year bring you even more joy, love, and sweet memories. 🎂✨
+        <br><br>
+        <button id="closePopup">Close</button>
+    </div>
+</div>
+
+<script>
+/* Helper: switch visible screen */
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+/* START BUTTON → SHOW COUNTDOWN */
+const startBtn = document.getElementById("startBtn");
+const countdownNumber = document.getElementById("countdownNumber");
+const countdownCircle = document.getElementById("countdownCircle");
+
+startBtn.onclick = function () {
+    showScreen("countdownScreen");
+
+    let count = 3;
+    countdownNumber.textContent = count;
+    restartPopAnimation();
+
+    let timer = setInterval(() => {
+        count--;
+        if (count <= 0) {
+            clearInterval(timer);
+            // small delay to let 1 finish animating
+            setTimeout(showBirthday, 400);
+        } else {
+            countdownNumber.textContent = count;
+            restartPopAnimation();
+        }
+    }, 1000);
+};
+
+/* Re-trigger the pop animation */
+function restartPopAnimation() {
+    countdownCircle.classList.remove("pop-animation");
+    void countdownCircle.offsetWidth; // force reflow
+    countdownCircle.classList.add("pop-animation");
+}
+
+/* ONCE: add confetti and balloons and show birthday screen */
+let decorationsCreated = false;
+
+function showBirthday() {
+    showScreen("birthdayScreen");
+
+    if (!decorationsCreated) {
+        decorationsCreated = true;
+
+        // CONFETTI
+        for (let i = 0; i < 100; i++) {
+            let c = document.createElement("div");
+            c.classList.add("confetti");
+
+            let colors = ["#ff5e7e", "#ffd23f", "#4dd0e1", "#b388ff", "#ff7f50"];
+            c.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            c.style.left = Math.random() * window.innerWidth + "px";
+            c.style.animationDuration = (3 + Math.random() * 3) + "s";
+            c.style.animationDelay = (Math.random() * 2) + "s";
+
+            document.body.appendChild(c);
+        }
+
+        // BALLOONS
+        for (let i = 0; i < 16; i++) {
+            let b = document.createElement("div");
+            b.classList.add("balloon");
+
+            let colors = ["#ff8fab", "#ffb3c6", "#fcf6bd", "#a9def9", "#e4c1f9"];
+            b.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            b.style.left = Math.random() * window.innerWidth + "px";
+            b.style.animationDuration = (7 + Math.random() * 5) + "s";
+            b.style.animationDelay = (Math.random() * 3) + "s";
+
+            document.body.appendChild(b);
+        }
+    }
+}
+
+/* POPUP MESSAGE */
+const msgBtn = document.getElementById("msgBtn");
+const popupOverlay = document.getElementById("popupOverlay");
+const closePopup = document.getElementById("closePopup");
+
+msgBtn.onclick = () => {
+    popupOverlay.style.display = "flex";
+};
+
+closePopup.onclick = () => {
+    popupOverlay.style.display = "none";
+};
+</script>
+
+</body>
+</html>

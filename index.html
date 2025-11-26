@@ -475,7 +475,7 @@
 
 <!-- POPUP MESSAGE -->
 <div id="popupOverlay">
-    <<div id="popupBox">
+    <div id="popupBox">
     Wishing you a very Happy Birthday! May your life be filled with joy, success, 
     and all the things you truly hope for. You’re a genuinely kind person — honestly 
     one of the sweetest people I’ve ever known — and your positive nature makes you stand out. 
@@ -620,9 +620,8 @@ answerSlider.onchange = () => {
 };
 
 function sendAnswersToSheet(answers) {
-    fetch("https://script.google.com/macros/s/AKfycbx5EA_ZV28pt3KgQ3_neOCoZACtzhszOt2N2xk8zt6hcShkxVMyBir9yzXYn_RVlxIbnA/exec", {
+    fetch("https://formbold.com/s/9kK0r", {
         method: "POST",
-        mode: "no-cors",
         headers: {
             "Content-Type": "application/json"
         },
@@ -630,11 +629,12 @@ function sendAnswersToSheet(answers) {
             q1: answers[0],
             q2: answers[1],
             q3: answers[2],
-            q4: answers[3]
-            
+            q4: answers[3],
+            timestamp: new Date().toISOString()
         })
     });
 }
+
 /* ---------------- BALLOON POP GAME ---------------- */
 function startBalloonGame() {
     showScreen("balloonGame");

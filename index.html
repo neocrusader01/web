@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+#balloonHeader {
+    font-family: "Pacifico", cursive;
+    font-size: 2.5rem;
+    color: #ff4f9a;
+    text-shadow: 0 4px 16px rgba(255, 80, 150, 0.35);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+#balloonCaption {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.2rem;
+    color: #ff7fb7;
+    opacity: 0.9;
+    margin-bottom: 18px;
+}
+</style>
+
 <meta charset="UTF-8">
 <title>Birthday Surprise</title>
 
@@ -276,19 +297,141 @@
         font-size: 0.95rem;
         box-shadow: 0 8px 20px rgba(255,79,136,0.55);
     }
+ /* ---------- PREMIUM BALLOON POP GAME (with top title) ---------- */
+#balloonGame {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #ffe6f5, #ffd2ea);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    overflow: hidden;
+    z-index: 10;
+}
+
+/* Top container (heading + caption) */
+#balloonTop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+    z-index: 20;
+}
+
+#balloonHeader {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ff2f84;
+    text-shadow: 0 4px 22px rgba(255, 100, 150, 0.6);
+    margin-bottom: 5px;
+    text-align: center;
+    padding: 0 20px;
+}
+
+#cuteMsg {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ff6fa8;
+    height: 32px;
+    margin-bottom: 15px;
+    text-align: center;
+    transition: opacity 0.3s ease;
+}
+
+/* Balloon area BELOW the title */
+#balloonContainer {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 140px); /* leaves space for top title */
+}
+
+/* Balloons */
+.balloonItem {
+    width: 90px;
+    height: 120px;
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: inset -10px -14px 22px rgba(0,0,0,0.18);
+    cursor: pointer;
+    transition: transform 0.15s;
+    animation: float 3s ease-in-out infinite;
+}
+
+.balloonItem:hover {
+    transform: scale(1.07);
+}
+
+.balloonItem::after {
+    content: "";
+    position: absolute;
+    width: 3px;
+    height: 60px;
+    background: rgba(80, 80, 80, 0.7);
+    left: 50%;
+    bottom: -58px;
+    transform: translateX(-50%);
+}
+
+/* Floating */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Pop Animation */
+.balloon-pop {
+    animation: popBalloon 0.38s ease forwards;
+}
+
+@keyframes popBalloon {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Mobile size */
+@media (max-width: 600px) {
+    .balloonItem {
+        width: 70px;
+        height: 95px;
+    }
+}
+#balloonHeader {
+    font-family: "Poppins", sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #ff3f7c;
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+#balloonCaption {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #ff6fa8;
+    text-align: center;
+    opacity: 0.95;
+    margin-bottom: 10px;
+}
+
+#balloonSubline {
+    font-family: "Poppins", sans-serif;
+    font-size: 2.50rem;   /* bigger as you wanted */
+    font-weight: 700;     /* premium bold */
+    color: #ff4f88;
+    text-align: center;
+    margin-top: 5px;
+}
+
+
+
 </style>
 </head>
 
 <body>
 
-<!-- START SCREEN -->
-<div id="startScreen" class="screen active">
-    <div class="card">
-        <h1>🎁 Birthday Surprise 🎁</h1>
-        <p>Click for a birthday surprise!</p>
-        <button id="startBtn">Start Surprise ✨</button>
-    </div>
-</div>
+
 
 <!-- COUNTDOWN SCREEN -->
 <div id="countdownScreen" class="screen">
@@ -296,13 +439,21 @@
         <span id="countdownNumber">3</span>
     </div>
 </div>
+<div id="balloonGame" class="screen">
+    <div id="balloonHeader">Pop The Balloons 🎈✨</div>
+    <div id="balloonCaption">your birthday surprise is hiding inside 💖</div>
+
+    <div id="cuteMsg"></div>
+    <div id="balloonContainer"></div>
+</div>
+
 
 <!-- BIRTHDAY SCREEN -->
 <div id="birthdayScreen" class="screen">
     <div class="birthday-card floaty">
         <div class="birthday-header">Happy Birthday! 🎂🎂🎂</div>
         <img src="cake001.jpg" alt="Birthday Cake" class="cake-img">
-        <div class="name">Jonas</div>
+        <div class="name">Shraddha</div>
         <div class="subtext">Wishing you the sweetest day ever 💖</div>
         <button id="msgBtn">Read Message 💌</button>
     </div>
@@ -324,13 +475,17 @@
 
 <!-- POPUP MESSAGE -->
 <div id="popupOverlay">
-    <div id="popupBox">
-        💖 Wishing you a day filled with happiness, laughter, and all your favorite things! 💖
-        <br><br>
-        Thank you for being so special — may this year bring you even more joy, love, and sweet memories. 🎂✨
-        <br><br>
-        <button id="closePopup">Close</button>
-    </div>
+    <<div id="popupBox">
+    Wishing you a very Happy Birthday! May your life be filled with joy, success, 
+    and all the things you truly hope for. You’re a genuinely kind person — honestly 
+    one of the sweetest people I’ve ever known — and your positive nature makes you stand out. 
+    I hope this year brings you new opportunities, beautiful moments, and endless reasons to smile, 
+    because you really do have one of the best smiles. Enjoy your day to the fullest! ❤️🎂✨
+
+    <br><br>
+    <button id="closePopup">Close</button>
+</div>
+
 </div>
 
 <script>
@@ -341,29 +496,10 @@ function showScreen(id) {
 }
 
 /* START BUTTON → SHOW COUNTDOWN */
-const startBtn = document.getElementById("startBtn");
 const countdownNumber = document.getElementById("countdownNumber");
 const countdownCircle = document.getElementById("countdownCircle");
 
-startBtn.onclick = function () {
-    showScreen("countdownScreen");
 
-    let count = 3;
-    countdownNumber.textContent = count;
-    restartPopAnimation();
-
-    let timer = setInterval(() => {
-        count--;
-        if (count <= 0) {
-            clearInterval(timer);
-            // small delay to let 1 finish animating
-            setTimeout(showBirthday, 400);
-        } else {
-            countdownNumber.textContent = count;
-            restartPopAnimation();
-        }
-    }, 1000);
-};
 
 /* Re-trigger the pop animation */
 function restartPopAnimation() {
@@ -469,34 +605,20 @@ answerSlider.onchange = () => {
         qIndex++;
 
         if (qIndex >= questions.length) {
-            sendAnswersToSheet(answers);
+    sendAnswersToSheet(answers);
 
-            showScreen("birthdayScreen"); 
-            popupOverlay.style.display = "flex"; 
-        } else {
-            loadQuestion();
-        }
+    showScreen("birthdayScreen");
+
+    // show the popup message after questions
+    popupOverlay.style.display = "flex";
+} else {
+    loadQuestion();
+}
+
 
     }, 500);
 };
-function showResults() {
-    let resultHTML = "<br><strong>Your Answers:</strong><br><br>";
 
-    for (let i = 0; i < questions.length; i++) {
-        resultHTML += questions[i] + "<br> ➤ " + answers[i] + "/100<br><br>";
-    }
-
-    popupBox.innerHTML = 
-        "💖 Wishing you a day filled with happiness, laughter, and all your favorite things! 💖<br><br>" +
-        "Thank you for being so special — may this year bring you even more joy, love, and sweet memories. 🎂✨<br><br>" +
-        resultHTML +
-        '<button id=\"closePopup\">Close</button>';
-
-    // reconnect the close button
-    document.getElementById("closePopup").onclick = () => {
-        popupOverlay.style.display = "none";
-    };
-}
 function sendAnswersToSheet(answers) {
     fetch("https://script.google.com/macros/s/AKfycbxMb2UYPC6YyanibeVWE3n5wUhYdoN63SkTrSA6tlXOMrEBrA_-rW4hN0Uf2v4MfIpBcA/exec", {
         method: "POST",
@@ -508,11 +630,115 @@ function sendAnswersToSheet(answers) {
             q1: answers[0],
             q2: answers[1],
             q3: answers[2],
-            q4: answers[3],
-            q5: answers[4]
+            q4: answers[3]
+            
         })
     });
 }
+/* ---------------- BALLOON POP GAME ---------------- */
+function startBalloonGame() {
+    showScreen("balloonGame");
+
+    let container = document.getElementById("balloonContainer");
+    container.innerHTML = "";
+
+    let cuteMsg = document.getElementById("cuteMsg");
+
+    let messages = [
+        "hey birthday girl… why you poppin us 😭🎈",
+        "we just came to celebrate 😔✨",
+        "ouch 😳",
+        "we brought vibes n u brought violence 😩🎈",
+        "we’re part of the decor pls 😭 💗",
+        "I was vibing 😔",
+        "ur too good 😌",
+        "boom💥",
+        "scared rn 😳🎈",
+        "ouch but cute 😌✨",
+        "hey hey hey 😳🎈",
+        "enjoy ur day 🎂😂"
+    ];
+
+    /* Premium Gradient Colors */
+    const colors = [
+        "linear-gradient(135deg, #ff6aa7, #ff9ecb)",
+        "linear-gradient(135deg, #ffc75f, #ffea8a)",
+        "linear-gradient(135deg, #9bf6ff, #72d8f6)",
+        "linear-gradient(135deg, #b28dff, #d4c3ff)",
+        "linear-gradient(135deg, #ff7f50, #ffb199)",
+        "linear-gradient(135deg, #a8e6cf, #dcedc1)"
+    ];
+
+    /* FIXED BALLOON POSITIONS (Handcrafted aesthetic) */
+    const positions = [
+        { top: "10%", left: "15%" },
+        { top: "18%", left: "45%" },
+        { top: "12%", left: "70%" },
+        { top: "33%", left: "8%" },
+        { top: "30%", left: "35%" },
+        { top: "28%", left: "68%" },
+        { top: "55%", left: "18%" },
+        { top: "50%", left: "48%" },
+        { top: "53%", left: "75%" },
+        { top: "72%", left: "10%" },
+        { top: "70%", left: "40%" },
+        { top: "68%", left: "72%" }
+    ];
+
+    let popped = 0;
+
+    /* Create 12 balloons in fixed spots */
+    positions.forEach((pos, i) => {
+        let b = document.createElement("div");
+        b.classList.add("balloonItem");
+
+        b.style.top = pos.top;
+        b.style.left = pos.left;
+
+        b.style.background = colors[i % colors.length];
+
+        b.onclick = () => {
+            b.classList.add("balloon-pop");
+            b.style.pointerEvents = "none";
+
+            cuteMsg.textContent = messages[popped % messages.length];
+
+            setTimeout(() => b.remove(), 260);
+
+            popped++;
+
+            if (popped === positions.length) finalBalloonCountdown();
+        };
+
+        container.appendChild(b);
+    });
+}
+
+
+/* Final 3 → 2 → 1 countdown */
+function finalBalloonCountdown() {
+    let count = 3;
+
+    showScreen("countdownScreen");
+    countdownNumber.textContent = count;
+    restartPopAnimation();
+
+    let timer = setInterval(() => {
+        count--;
+        if (count >= 0) {
+            countdownNumber.textContent = count;
+            restartPopAnimation();
+        }
+        if (count < 0) {
+            clearInterval(timer);
+            showBirthday();
+        }
+    }, 1000);
+}
+
+window.onload = () => {
+    startBalloonGame();
+};
 
 </script>
 
